@@ -1,24 +1,6 @@
 from os import path
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, find_namespace_packages
 import sys
-
-
-# NOTE: This file must remain Python 2 compatible for the foreseeable future,
-# to ensure that we error out properly for people with outdated setuptools
-# and/or pip.
-if sys.version_info < (3, 6):
-    error = """
-pysurface does not support Python {0}.{2}.
-Python 3.6 and above is required. Check your Python version like so:
-
-python3 --version
-
-This may be due to an out-of-date pip. Make sure you have pip >= 9.0.1.
-Upgrade pip like so:
-
-pip install --upgrade pip
-""".format(3, 6)
-    sys.exit(error)
 
 here = path.abspath(path.dirname(__file__))
 

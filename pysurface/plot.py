@@ -8,7 +8,8 @@ def plot_surf_hemi(surface, labels, scalar_map, view=['lateral', 'medial'],
                    embed_nb=False, interactive=False,
                    cmap='Spectral_r', color_bar='right', 
                    nan_color=(0.85, 0.85, 0.85, 1), 
-                   zoom=1.5, size=(1000, 800), 
+                   zoom=1.5, size=(1000, 800),
+                   return_plotter=False, share=False,
                    **kwargs):
     
     """
@@ -86,6 +87,6 @@ def plot_surf_hemi(surface, labels, scalar_map, view=['lateral', 'medial'],
     F = plotting.plot_surf(surfs, layout, array_name=array_name, label_text=labels,
                                       color_bar=color_bar, cmap=cmap, zoom=zoom, size=size,
                                       interactive=interactive, embed_nb=embed_nb, screenshot=screenshot,
-                                      filename=filename, **kwds, nan_color=nan_color)
+                                      filename=filename, **kwds, nan_color=nan_color, return_plotter=return_plotter)
     
     return F

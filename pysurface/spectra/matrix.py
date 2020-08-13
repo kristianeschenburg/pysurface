@@ -1,6 +1,6 @@
 import numpy as np
 from scipy import sparse
-from pysurface import graphs
+from .. import graphs
 
 
 def normal(X, F, A=None):
@@ -138,6 +138,8 @@ def weightedadjacency(X, F):
     W: float, sparse array
     weighted adjacency matrix
     """
+
+    n = F.max()+1
 
     # Compute weights for all links (euclidean distance)
     weights = np.sqrt(np.concatenate([((X[F[:, 0], :]-X[F[:, 1], :])**2).sum(1),

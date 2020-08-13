@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+from scipy import sparse
 
 
 class SurfaceAdjacency(object):
@@ -33,6 +34,7 @@ class SurfaceAdjacency(object):
 
         """
 
+        F = self.faces
         n = F.max()+1
 
         rows = np.concatenate([F[:, 0], F[:, 0],

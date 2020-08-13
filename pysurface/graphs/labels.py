@@ -1,6 +1,8 @@
 import networkx as nx
 import numpy as np
 
+from . import adjacency
+
 
 class BoundaryMap(object):
 
@@ -45,7 +47,7 @@ class BoundaryMap(object):
         self.boundaries = boundaries
 
 
-class Components(SurfaceAdjacency):
+class Components(adjacency.SurfaceAdjacency):
 
     """
     Generate connected-components from surface adjacency object.
