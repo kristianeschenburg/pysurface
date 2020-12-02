@@ -122,7 +122,7 @@ def adjacency(F):
 
     return A
 
-def weightedadjacency(X, F):
+def weightedadjacency(X, F, inverse=False):
     """
     Compute weighted adjacency matrix.
 
@@ -151,6 +151,10 @@ def weightedadjacency(X, F):
 
     # penalize small distances (avoid division by zero)
     eps = 1e-6
+
+    if inverse:
+        weights = 1/weights
+
     weights = (weights + eps)**(-1)
 
     # remove duplicated edges
@@ -168,7 +172,7 @@ def weightedadjacency(X, F):
     weights = weights[idx]
 
     W = sparse.csr_matrix((weights, (rc[:, 0], rc[:, 1])), shape=(n, n))
-    W = W + W.transpose()
+    W = (W + W.transpose())/2
 
     return W
 

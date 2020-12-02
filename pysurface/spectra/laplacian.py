@@ -24,10 +24,37 @@ def degree(W):
 
     return [D, Dinv]
 
+def symnormlaplacian(W):
+
+    """
+    Compute the symmetric normalize laplacian of a graph.
+
+    Parameters:
+    - - - - -
+    W: float, array
+        weight adjacency matrix
+
+    Returns:
+    - - - -
+    L: float, sparse array
+        surface mesh Laplacian matrix
+    """
+
+    [D, Dinv] = degree(W)
+    Dsqrt = np.sqrt(Dinv)
+
+    n = D.shape[0]
+
+    I = sparse.eye(n)
+
+    L = I - np.dot(np.dot(Dsqrt, W), Dsqrt)
+
+    return L
+
 def generallaplacian(W, G=None):
 
     """
-    Compute the general laplacian of the surface mesh.
+    Compute the general laplacian of graph.
 
     Parameters:
     - - - - -

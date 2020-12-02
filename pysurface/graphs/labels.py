@@ -160,10 +160,10 @@ class LabelAdjacency(object):
 
     """
 
-    def __init__(self, label, adj_list, mids):
+    def __init__(self, label, sadj, mids):
 
         self.label = label
-        self.surf_adj = adj_list
+        self.s_adj = s_adj
         self.mids = mids
 
     def generate_adjList(self, filter_indices=None):
@@ -206,4 +206,4 @@ class LabelAdjacency(object):
             cleaned = list(include.difference(exclude))
             labAdj[k] = cleaned
 
-        self.adj_list = labAdj
+        self.l_adj = labAdj
