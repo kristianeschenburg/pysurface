@@ -155,7 +155,7 @@ def weightedadjacency(X, F, inverse=False):
     if inverse:
         weights = 1/weights
 
-    weights = (weights + eps)**(-1)
+    weights = (weights + eps)
 
     # remove duplicated edges
     rows = np.concatenate([F[:, 0], F[:, 0],

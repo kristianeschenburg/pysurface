@@ -105,10 +105,12 @@ class Graph(object):
     def _vertex_normals(self):
 
         """
-        Compute the normal vector for each vertex.  Each normal
-        is the averaged of each triangle to which a vertex belongs
-        to -- the contribution of each triangle normal is weighted 
-        by the area of each triangle.
+        Compute the normal vector for each vertex using the MWAAT detailed
+        here ```https://link.springer.com/article/10.1007/s00371-004-0271-1```
+        where MWAAT is the mean weighted by area of adjacent triangles method.
+        
+        That is, the contribution of each triangle normal is weighted 
+        by the area of the triangle.
 
         Returns:
         - - - -
@@ -124,8 +126,13 @@ class Graph(object):
 
         for i in np.arange(self.vertices.shape[0]):
             
-            v_norm = (t_areas[t_adj[i]]/t_areas[t_adj[i]].sum())[:, None]*t_norms[t_adj[i]]
+            # compute contribution of each triangle
+            weights = (t_areas[t_adj[i]]/t_areas[t_adj[i]].sum())[:, None]
+            # weight triangle normals by contribution
+            v_norm = weights*t_norms[t_adj[i]]
+            # compute mean normal
             v_norm = v_norm.mean(0)
+            # normalize to unit length
             v_norm = v_norm / np.linalg.norm(v_norm)
             v_norms[i] = v_norm
             

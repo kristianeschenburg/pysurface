@@ -1,0 +1,5 @@
+brainspace
+networkx
+nibabel
+numpy
+scipy

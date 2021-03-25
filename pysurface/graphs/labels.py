@@ -207,3 +207,60 @@ class LabelAdjacency(object):
             labAdj[k] = cleaned
 
         self.l_adj = labAdj
+
+
+class TPM(object):
+
+    """
+    Class to compute the topological matrix of a given parcellation.
+
+    Assume L is the number of cortical areas in a parcellation.  
+    The parcellation is converted to an LxL matrix, where entry (i,j) 
+    is the number of voxels in area (j) sharing an edge with voxels in areas (j).
+
+    Parameters:
+    - - - - -
+    max_labels: int
+        maximum number of expected labels in parcellation
+    """
+
+    def __init__(self, max_label=180):
+
+        self.max_label = max_label
+    
+    def fit(self, label, adj):
+
+        """
+        Parameters:
+        - - - - -
+        label: int, array
+            vector of label assignments for each voxel
+            assumes the labels start at 1, and end at ```max_label```
+        adj: dict
+            adjacency list of surface over which the parcellation is distributed
+        """
+
+        n = self.max_label + 1
+
+        label_map = {k: None for k in range(1, n)}
+        for i in label_map.keys():
+            label_map[i] = np.where(label == i)[0]
+            
+        L = np.zeros((n, n))
+        for k,v in label_map.items():
+
+            # identify voxels adjacent to those with label ```k```
+            if k in label:
+                neighbors = [adj[i] for i in v]
+                neighbors = np.unique(np.concatenate(neighbors))
+                # get labels of adjacent voxels
+                adj_labels = label[neighbors]
+                # compute number of instances of each adjacent label
+                [l, c] = np.unique(adj_labels, return_counts=True)
+
+                L[k, l] = c
+        
+        L = L / L.sum(1)[:,None]
+        L[np.isnan(L)] = 0
+        
+        self.tpm = L[1:,1:]
