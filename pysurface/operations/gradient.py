@@ -45,7 +45,6 @@ class Gradient(object):
             assert mask.shape == field.shape
 
         if np.any(mask):
-
             bins = np.where(mask)[0]
             v_adj = {k: None for k in bins}
 
