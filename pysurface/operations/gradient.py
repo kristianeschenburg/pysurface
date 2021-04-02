@@ -141,13 +141,14 @@ class Angle(object):
         
         """
 
-        inner = (g1*g2).sum(1)
         n1 = np.linalg.norm(g1, axis=1)
-        n2 = np.linalg.norm(g2)
+        n2 = np.linalg.norm(g2, axis=1)
 
-        cosine = inner / (n1*n2)
+        g1 = g1 / n1[:,None]
+        g2 = g2 / n2[:,None]
 
-        radians = np.arccos(cosine)
+        inner = (g1*g2).sum(1)
+        radians = np.arccos(inner)
         degrees = np.rad2deg(radians)
 
         self.degrees = degrees
