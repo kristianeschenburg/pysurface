@@ -154,35 +154,30 @@ class LabelAdjacency(object):
 
     Parameters:
     ------------
-        label : path to label file.  Can be either label.gii or dlabel.nii
-        surfAdj : surface adjacency list
-        k : path to midline indices
-
+        label : np.array
+            vector of vertex label assignments
+        surfAdj : dict
+            surface adjacency list
     """
 
-    def __init__(self, label, sadj, mids):
+    def __init__(self, label, adjacency):
 
         self.label = label
-        self.s_adj = s_adj
-        self.mids = mids
+        self.adjacency = adjacency
 
-    def generate_adjList(self, filter_indices=None):
+    def generate(self):
 
         """
-
-        Method to compute label adjacency list for a given subject.
-        If provided, will save the label adjacency list to provided filename
 
         """
 
         labels = self.label
-        mids = self.mids
-        adj_list = self.adj_list
+        adjacency = self.adjacency
 
         # get unique non-midline labels in cortical map
         labs = set(labels).difference({0, -1})
 
-        labAdj = {}.fromkeys(labs)
+        lab_adj = {}.fromkeys(labs)
 
         # Loop over unique values in label map
         for k in labs:
@@ -191,22 +186,18 @@ class LabelAdjacency(object):
 
             tempInds = np.where(labels == k)[0]
 
-            nLabels = []
+            neighbor_labels = []
 
             # Loop over vertices in each parcel
             for j in tempInds:
 
-                # get neighbors, remove vertices included in midline
+                neighbor_labels.append(labels[adjacency[j]])
+            
+            neighbor_labels = set(np.concatenate(neighbor_labels))
+            neighbor_labels = [l for l in neighbor_labels if l not in [k, 0, -1]]
+            lab_adj[k] = neighbor_labels
 
-                neighbors = list(set(adj_list[j]).difference(set(mids)))
-                nLabels.append(labels[neighbors])
-
-            exclude = set([k, 0, -1])
-            include = set(np.concatenate(nLabels))
-            cleaned = list(include.difference(exclude))
-            labAdj[k] = cleaned
-
-        self.l_adj = labAdj
+        self.adj = lab_adj
 
 
 class TPM(object):

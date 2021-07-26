@@ -10,8 +10,10 @@ pysurface.egg-info/requires.txt
 pysurface.egg-info/top_level.txt
 pysurface/graphs/__init__.py
 pysurface/graphs/adjacency.py
+pysurface/graphs/graphs.py
 pysurface/graphs/labels.py
 pysurface/operations/__init__.py
+pysurface/operations/gradient.py
 pysurface/operations/sampling.py
 pysurface/operations/smoothing.py
 pysurface/operations/transforms.py

@@ -42,7 +42,7 @@ class Gradient(object):
         # if mask is supplied, make sure the domain of the mask
         # is the same as that of the field
         if np.any(mask):
-            assert mask.shape == field.shape
+            assert mask.shape[0] == field.shape[0]
 
         if np.any(mask):
             bins = np.where(mask)[0]
