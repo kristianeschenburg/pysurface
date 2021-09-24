@@ -154,59 +154,64 @@ class LabelAdjacency(object):
 
     Parameters:
     ------------
-        label : path to label file.  Can be either label.gii or dlabel.nii
-        surfAdj : surface adjacency list
-        k : path to midline indices
+        label : int, array
+            numpy array of discreate labels, mapped onto the surface
+        region_map: dict
+            mapping from region names to indices
+        adj: dict
+            adjacency structure of surface vertices
+        indices: list
+            inclusion indices
 
     """
 
-    def __init__(self, label, sadj, mids):
+    def __init__(self, label, region_map, adj, indices=None):
 
         self.label = label
-        self.s_adj = s_adj
-        self.mids = mids
+        self.region_map = region_map
+        self.adj = adj
+        self.indices = indices
 
-    def generate_adjList(self, filter_indices=None):
+    def generate(self):
 
         """
-
         Method to compute label adjacency list for a given subject.
-        If provided, will save the label adjacency list to provided filename
-
         """
 
-        labels = self.label
-        mids = self.mids
-        adj_list = self.adj_list
+        label = self.label
+        region_map = self.region_map
+        indices = self.indices
+        adj = self.adj
 
-        # get unique non-midline labels in cortical map
-        labs = set(labels).difference({0, -1})
+        region_2_label = {k: np.unique(label[idx])[0] if idx.shape[0] > 0 else None \
+                             for k, idx in region_map.items() \
+                             if k != '???'}
 
-        labAdj = {}.fromkeys(labs)
+        label_2_region = dict(zip(region_2_label.values(), region_2_label.keys()))
+
+        label_adjacency = {k: [] for k in region_2_label.keys()}
 
         # Loop over unique values in label map
-        for k in labs:
+        # Loop over unique values in label map
+        for reg, k in region_2_label.items():
 
             # Find vertices belonging to parcel with current label
 
-            tempInds = np.where(labels == k)[0]
+            idx = region_map[reg]
+            if idx.shape[0] < 1:
+                print('Region: {:}, Indices: {:}, Shape: {:}'.format(reg, idx, idx.shape))
+                continue
 
-            nLabels = []
+            neighbors = np.concatenate([adj[k] for k in idx if k in indices])
+            neighbors = np.unique(neighbors)
+            neighbor_labels = np.unique([label[k] for k in neighbors])
 
-            # Loop over vertices in each parcel
-            for j in tempInds:
+            label_adjacency[reg] = [label_2_region[k] for k in neighbor_labels if k > 0]
+        
+        self.label_adjacency = label_adjacency
+        self.region_2_label = region_2_label
+        self.label_2_region = label_2_region
 
-                # get neighbors, remove vertices included in midline
-
-                neighbors = list(set(adj_list[j]).difference(set(mids)))
-                nLabels.append(labels[neighbors])
-
-            exclude = set([k, 0, -1])
-            include = set(np.concatenate(nLabels))
-            cleaned = list(include.difference(exclude))
-            labAdj[k] = cleaned
-
-        self.l_adj = labAdj
 
 
 class TPM(object):
