@@ -154,6 +154,7 @@ class LabelAdjacency(object):
 
     Parameters:
     ------------
+<<<<<<< HEAD
         label : int, array
             numpy array of discreate labels, mapped onto the surface
         region_map: dict
@@ -171,10 +172,23 @@ class LabelAdjacency(object):
         self.region_map = region_map
         self.adj = adj
         self.indices = indices
+=======
+        label : np.array
+            vector of vertex label assignments
+        surfAdj : dict
+            surface adjacency list
+    """
+
+    def __init__(self, label, adjacency):
+
+        self.label = label
+        self.adjacency = adjacency
+>>>>>>> ccacb123a1f2bc8921ea888697ea4a6dcf48b8f7
 
     def generate(self):
 
         """
+<<<<<<< HEAD
         Method to compute label adjacency list for a given subject.
         """
 
@@ -186,10 +200,21 @@ class LabelAdjacency(object):
         region_2_label = {k: np.unique(label[idx])[0] if idx.shape[0] > 0 else None \
                              for k, idx in region_map.items() \
                              if k != '???'}
+=======
+
+        """
+
+        labels = self.label
+        adjacency = self.adjacency
+>>>>>>> ccacb123a1f2bc8921ea888697ea4a6dcf48b8f7
 
         label_2_region = dict(zip(region_2_label.values(), region_2_label.keys()))
 
+<<<<<<< HEAD
         label_adjacency = {k: [] for k in region_2_label.keys()}
+=======
+        lab_adj = {}.fromkeys(labs)
+>>>>>>> ccacb123a1f2bc8921ea888697ea4a6dcf48b8f7
 
         # Loop over unique values in label map
         # Loop over unique values in label map
@@ -197,6 +222,7 @@ class LabelAdjacency(object):
 
             # Find vertices belonging to parcel with current label
 
+<<<<<<< HEAD
             idx = region_map[reg]
             if idx.shape[0] < 1:
                 print('Region: {:}, Indices: {:}, Shape: {:}'.format(reg, idx, idx.shape))
@@ -212,6 +238,22 @@ class LabelAdjacency(object):
         self.region_2_label = region_2_label
         self.label_2_region = label_2_region
 
+=======
+            tempInds = np.where(labels == k)[0]
+
+            neighbor_labels = []
+
+            # Loop over vertices in each parcel
+            for j in tempInds:
+
+                neighbor_labels.append(labels[adjacency[j]])
+            
+            neighbor_labels = set(np.concatenate(neighbor_labels))
+            neighbor_labels = [l for l in neighbor_labels if l not in [k, 0, -1]]
+            lab_adj[k] = neighbor_labels
+
+        self.adj = lab_adj
+>>>>>>> ccacb123a1f2bc8921ea888697ea4a6dcf48b8f7
 
 
 class TPM(object):
